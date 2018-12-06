@@ -3,12 +3,14 @@ import { withRouter } from "react-router-dom";
 import { SignUpLink } from "../Pages/SignUp";
 import { PasswordForgetLink } from "../Pages/PasswordForget";
 import { auth } from "../Firebase";
+import "react-bootstrap";
+import "./SignIn.css";
 
 const SignInPage = ({ history }) => (
-  <div>
-    <h1>SignIn</h1>
+  <div id="signInBox">
+    <h1>Sign in</h1>
     <SignInForm history={history} />
-    <PasswordForgetLink />
+    <PasswordForgetLink id="forget" />
     <SignUpLink />
   </div>
 );
@@ -20,16 +22,15 @@ const updateByPropertyName = (propertyName, value) => () => ({
 const INITIAL_STATE = {
   email: "",
   password: "",
+  hover: false,
   error: null
 };
 
 class SignInForm extends Component {
   constructor(props) {
     super(props);
-
     this.state = { ...INITIAL_STATE };
   }
-
   onSubmit = event => {
     const { email, password } = this.state;
 
@@ -47,34 +48,41 @@ class SignInForm extends Component {
 
     event.preventDefault();
   };
-
   render() {
     const { email, password, error } = this.state;
 
     const isInvalid = password === "" || email === "";
-
     return (
       <form onSubmit={this.onSubmit}>
         <input
+          class="container"
+          id="email"
           value={email}
+          onFocus={e => (e.target.placeholder = "")}
+          onBlur={e => (e.target.placeholder = "Email Address")}
           onChange={event =>
             this.setState(updateByPropertyName("email", event.target.value))
           }
           type="text"
           placeholder="Email Address"
         />
+        <br />
         <input
+          class="container"
+          id="password"
           value={password}
+          onFocus={e => (e.target.placeholder = "")}
+          onBlur={e => (e.target.placeholder = "Password")}
           onChange={event =>
             this.setState(updateByPropertyName("password", event.target.value))
           }
           type="password"
           placeholder="Password"
         />
-        <button disabled={isInvalid} type="submit">
+        <br />
+        <button class="button" disabled={isInvalid} type="submit">
           Sign In
         </button>
-
         {error && <p>{error.message}</p>}
       </form>
     );
@@ -82,5 +90,4 @@ class SignInForm extends Component {
 }
 
 export default withRouter(SignInPage);
-
 export { SignInForm };
